@@ -4,7 +4,6 @@ This repository contains source code used in
 
 > [1] López-Puigdollers, D., Mateo-García, G., Gómez-Chova, L. “Benchmarking Deep Learning models for Cloud Masking in Landsat-8 and Sentinel-2” Submitted [pre-print](https://arxiv.org/abs/xxxx.xxxxx)
 
-Code for masking clouds in Landsat-8 &amp; Sentinel-2.
 
 ## Requirements
 
@@ -37,7 +36,26 @@ The `--s2image` attribute points to the unzipped `SAFE` folder. The `--resolutio
 ```
 python inference.py CloudMaskL8 --s2image ./S2A_MSIL1C_20160417T110652_N0201_R137_T29RPQ_20160417T111159.SAFE/ --namemodel rgbiswir --resolution 30
 ```
-The folder `./LC08_L1TP_002054_20160520_20170324_01_T1` will contain a GeoTIF with the cloud mask.
+The folder `./S2A_MSIL1C_20160417T110652_N0201_R137_T29RPQ_20160417T111159.SAFE` will contain a GeoTIF with the cloud mask.
+
+
+## Cite
+
+If you use this work please cite:
+
+```
+ @article{mateo-garcia_transferring_2020,
+	title = {Transferring deep learning models for cloud detection between {Landsat}-8 and {Proba}-{V}},
+	volume = {160},
+	issn = {0924-2716},
+	doi = {10.1016/j.isprsjprs.2019.11.024},
+	journal = {ISPRS Journal of Photogrammetry and Remote Sensing},
+	author = {Mateo-García, Gonzalo and Laparra, Valero and López-Puigdollers, Dan and Gómez-Chova, Luis},
+	month = feb,
+	year = {2020},
+	pages = {1--17},
+}
+```
 
  
 
