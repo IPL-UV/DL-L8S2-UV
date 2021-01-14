@@ -61,7 +61,7 @@ If you use this work please cite:
 ## Related work
 
 * [Multitemporal cloud masking in the Google Earth Engine](https://github.com/IPL-UV/ee_ipl_uv)
-* [Proba-V to Landsat-8 transfer learning and Domain adaptation for cloud detection](https://github.com/IPL-UV/pvl8dagans)
+* [Landsat-8 to Proba-V transfer learning and Domain adaptation for cloud detection](https://github.com/IPL-UV/pvl8dagans)
 
 
 
