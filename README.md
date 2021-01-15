@@ -35,7 +35,7 @@ Expects an L1C Sentinel-2 image from the [OpenHub](https://scihub.copernicus.eu/
 The `--s2image` attribute points to the unzipped `SAFE` folder. The `--resolution` attribute select the output resolution of the product (10, 20, 30 or 60)
 
 ```
-python inference.py CloudMaskL8 --s2image ./S2A_MSIL1C_20160417T110652_N0201_R137_T29RPQ_20160417T111159.SAFE/ --namemodel rgbiswir --resolution 30
+python inference.py CloudMaskS2 --s2image ./S2A_MSIL1C_20160417T110652_N0201_R137_T29RPQ_20160417T111159.SAFE/ --namemodel rgbiswir --resolution 30
 ```
 The folder `./S2A_MSIL1C_20160417T110652_N0201_R137_T29RPQ_20160417T111159.SAFE` will contain a GeoTIF with the cloud mask.
 

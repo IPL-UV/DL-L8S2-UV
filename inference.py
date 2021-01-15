@@ -9,20 +9,20 @@ import rasterio
 
 
 CLOUD_DETECTION_WEIGHTS = {
-    "rgbiswir": "/media/disk/databases/CMIX/setupgonzalo/experiments/landsatbiomeRGBISWIR7.hdf5",
-    "rgbi": "",
-    "allnt": ""
+    "rgbiswir": "/media/disk/databases/CMIX/setupgonzalo/experiments/landsatbiomeRGBISWIR7.hdf5", # TODO create checkpoints folder with model weights
+    "rgbi": "/media/disk/databases/CMIX/setupgonzalo/experiments/landsatbiomeRGBI6.hdf5",
 }
 
-BANDS_MODEL = {"L8rgbiswir": [2, 3, 4, 5, 6, 7],
-               "L8rgbi": [2, 3, 4, 5],
-               "L8allnt": [2, 3, 4, 5, 6, 7]
+BANDS_MODEL = {"L8rgbiswir": [2, 3, 4, 5, 6, 7], # 1-based band index
+               "L8rgbi": [2, 3, 4, 5], # 1-based band index
+               "S2rgbi" : [2, 3, 4, 8], # 1-based band index
+               "S2rgbiswir": [2, 3, 4, 8, 11, 12], # 1-based band index
 }
 
 
 class CloudMask(luigi.Task):
     namemodel = luigi.ChoiceParameter(description="name to save the binary cloud mask",
-                                      choices=["rgbi", "rgbiswir", "allnt"], default="rgbiswir")
+                                      choices=["rgbi", "rgbiswir"], default="rgbiswir")
 
     def satobj(self):
         raise NotImplementedError("Must add a satname")
