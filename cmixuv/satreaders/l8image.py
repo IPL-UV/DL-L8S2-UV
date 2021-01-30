@@ -6,12 +6,12 @@ https://landsat.usgs.gov/landsat-8-cloud-cover-assessment-validation-data
 
 """
 import os
-import numpy as np
-import rasterio
-from cmixuv.utils import predbytiles
-
 from datetime import datetime
 from datetime import timezone
+
+import numpy as np
+import rasterio
+import cmixuv.utils as utils
 
 
 def read_metadata(metadata_file):
@@ -98,14 +98,16 @@ class L8Image:
     Class to load L1T Landsat-8 image
 
     :param folder_tiffs: folder where the tiffs and metadata stored.
+    :param slice_rows_cols: list of slices=[slice(100,200),slice(100,200)]
+    to read only specific locations of the image
     """
-    def __init__(self, folder_tiffs):
+    def __init__(self, folder_tiffs, slice_rows_cols=None):
         if folder_tiffs.endswith('/'):
             folder_tiffs = folder_tiffs[:-1]
         self.folder_tiffs = folder_tiffs
         self.folder = folder_tiffs
         self.name = os.path.basename(folder_tiffs)
-
+        self.satname = "L8"
         self.metadata = self._read_metadata()
 
         dictio_metadata = self.metadata["PRODUCT_METADATA"]
@@ -129,6 +131,7 @@ class L8Image:
 
         pm = self.metadata["PRODUCT_METADATA"]
         trans = [float(pm["CORNER_UL_PROJECTION_X_PRODUCT"]), float(pm["CORNER_UL_PROJECTION_Y_PRODUCT"])]
+        self.rasterio_transform = self.src_rasterio().transform
         self.transform_numpy = np.array([[30, 0, trans[0]], [0, -30, trans[1]]])
 
         self.nrows = int(pm["REFLECTIVE_LINES"])
@@ -138,6 +141,11 @@ class L8Image:
                                             dictio_metadata["SCENE_CENTER_TIME"][:8],
                                             "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
         self.end_date = self.start_date
+
+        if slice_rows_cols is None:
+            self.slice = (slice(0, self.nrows), slice(0, self.ncols))
+        else:
+            self.slice = tuple(slice_rows_cols)
 
     def crs_proj(self):
         import rasterio
@@ -203,7 +211,6 @@ class L8Image:
         if slice_ is None:
             slice_ = self.slice
 
-
         with rasterio.open(fileband_name, "r") as src:
             img = src.read(1, window=slice_).astype(np.float32)
 
@@ -251,14 +258,14 @@ class L8Image:
                     img = np.ndarray((len(bands),) + b.shape, dtype=b.dtype)
 
             if axis_stack == 2:
-                img[...,i] = b
+                img[..., i] = b
             else:
                 img[i] = b
 
         if masked:
             mask = self.load_mask(slice_)
-            mask = predbytiles.mask_2D_to_3D(mask, img.shape[axis_stack])
-            img = np.ma.masked_array(img,mask)
+            mask = utils.mask_2D_to_3D(mask, img.shape[axis_stack])
+            img = np.ma.masked_array(img, mask)
 
         return img
 

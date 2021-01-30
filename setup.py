@@ -6,5 +6,5 @@ setup(name='cmixuv',
       author='Dan Lopez Puigdollers',
       author_email='dan.lopez@uv.es',
       include_package_data=True,
-      install_requires=["numpy", "rasterio", "tensorflow", "luigi"],
+      install_requires=["numpy", "lxml", "rasterio", "shapely", "spectral", "tensorflow", "luigi", "matplotlib"],
       zip_safe=False)
