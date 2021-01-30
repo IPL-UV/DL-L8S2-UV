@@ -20,8 +20,10 @@ CLOUD_DETECTION_WEIGHTS = {
 
 BANDS_MODEL = {"L8rgbiswir": [2, 3, 4, 5, 6, 7], # 1-based band index
                "L8rgbi": [2, 3, 4, 5], # 1-based band index
-               "S2rgbi" : [2, 3, 4, 8], # 1-based band index
-               "S2rgbiswir": [2, 3, 4, 8, 11, 12], # 1-based band index
+               # "S2rgbi" : [2, 3, 4, 8], # 1-based band index
+               # "S2rgbiswir": [2, 3, 4, 8, 11, 12], # 1-based band index
+               "S2rgbi": [1, 2, 3, 8],  # 1-based band index
+               "S2rgbiswir": [1, 2, 3, 8, 11, 12],  # 1-based band index
 }
 
 

@@ -13,15 +13,15 @@ The following code creates a new conda virtual environment with required depende
 ```bash
 conda create -n cmixuv -c conda-forge python=3.7 numpy scipy rasterio tensorflow=2 --y
 
-conda activate pvl8
+conda activate cmixuv
 
-pip install spectral tqdm luigi 
+pip install spectral tqdm luigi
 
 ```
 
 ## Inference Landsat-8 images
 
-Expects an L1T Landsat-8 image from the [EarthExplorer](https://earthexplorer.usgs.gov/). 
+Expects an L1T Landsat-8 image from the [EarthExplorer](https://earthexplorer.usgs.gov/).
 The `--landsatimage` attribute points to the unzipped folder with a GeoTIF image for each band.
 
 ```
@@ -31,7 +31,7 @@ The folder `./LC08_L1TP_002054_20160520_20170324_01_T1` will contain a GeoTIF wi
 
 ## Inference Sentinel-2 images
 
-Expects an L1C Sentinel-2 image from the [OpenHub](https://scihub.copernicus.eu/dhus). 
+Expects an L1C Sentinel-2 image from the [OpenHub](https://scihub.copernicus.eu/dhus).
 The `--s2image` attribute points to the unzipped `SAFE` folder. The `--resolution` attribute select the output resolution of the product (10, 20, 30 or 60)
 
 ```
@@ -62,8 +62,3 @@ If you use this work please cite:
 
 * [Multitemporal cloud masking in the Google Earth Engine](https://github.com/IPL-UV/ee_ipl_uv)
 * [Landsat-8 to Proba-V transfer learning and Domain adaptation for cloud detection](https://github.com/IPL-UV/pvl8dagans)
-
-
-
- 
-
