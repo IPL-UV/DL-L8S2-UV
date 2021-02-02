@@ -11,11 +11,11 @@ This repository contains source code used in
 The following code creates a new conda virtual environment with required dependencies.
 
 ```bash
-conda create -n cmixuv -c conda-forge python=3.7 numpy scipy rasterio tensorflow=2 --y
+conda create -n dl_l8s2_uv -c conda-forge python=3.7 tensorflow=2 matplotlib --y
 
-conda activate cmixuv
+conda activate dl_l8s2_uv
 
-pip install spectral tqdm luigi
+python setup.py install
 
 ```
 
