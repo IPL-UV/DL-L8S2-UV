@@ -31,6 +31,7 @@ BAND_PATTERN = "\D{1}\d{2}\D{3}_\d{8}\D{1}\d{6}_B(\w{2})"
 
 class S2Image:
     def __init__(self, s2_folder, slice_rows_cols=None, size_def="30"):
+        assert size_def in ["10", "30", "20", "60"], "resolution definition of bands must be 10, 20, 30 or 60"
         self.folder = s2_folder
         self.name = os.path.splitext(os.path.basename(self.folder))[0]
         self.satname = "S2"
@@ -58,6 +59,7 @@ class S2Image:
         logging.basicConfig(level=logging.WARNING)
 
     def set_size_default(self, size_def):
+        assert size_def in ["10", "30", "20", "60"], "resolution definition of bands must be 10, 20, 30 or 60"
         self.out_res = size_def
         self.set_slice(None)
 
@@ -71,7 +73,7 @@ class S2Image:
 
     @property
     def polygon(self):
-        with rasterio.open(self.granule[0], driver='JP2OpenJPEG') as src:
+        with rasterio.open(self.granule[1], driver='JP2OpenJPEG') as src:
             bbox = src.bounds
 
         bbox_lnglat = warp.transform_bounds(self.crs,
@@ -95,19 +97,17 @@ class S2Image:
 
     def load_bands(self, bands=None, slice_=None, enabled_cache=True):
         """
-        Expected slice_ to match self.out_res resolution
+        Load requested bands and return them at fixed resolution defined by self.out_res
+        Expected slice_ to match self.out_res resolution.
 
-        :param bands:
+        :param bands: list of bands. Check indexes from BANDS_LIST
         :param slice_:
-        :param enabled_cache:
+        :param enabled_cache: if cache is available, avoid reprojecting and speed up reading
         :return:
         """
         if bands is None:
             bands = list(range(len(BANDS_LIST)))
         assert any([type(bands) == np.ndarray, type(bands) == list]), "Selected bands must be an array or list"
-
-        assert (self.out_res in ["10", "20", "30", "60"]), \
-            "Not valid output resolution. \n" "Choose ""10"", ""20"", ""30"", ""60"""
 
         bbox, slice_ = self.from_slice_out_res(slice_=slice_)
 
