@@ -1,29 +1,31 @@
 """
-Classes and functions for reading S2 images.
+Class and functions for reading S2 images.
 
 https://sentinel.esa.int/web/sentinel/user-guides/sentinel-2-msi/document-library
 
 """
-import dl_l8s2_uv.utils as misc
 from rasterio import windows, warp, features, coords
 from rasterio.warp import reproject, Resampling
 from shapely.geometry import Polygon, MultiPolygon
 from lxml.etree import parse
 import xml.etree.ElementTree as ET
-import os
 import rasterio
+import h5py
+
 import numpy as np
+import dl_l8s2_uv.utils as misc
+
+import os
 import datetime
 import logging
-import h5py
 
 BANDS_RGB = [3, 2, 1]
 BANDS_10M = [1, 2, 3, 7]
 BANDS_20M = [4, 5, 6, 8, 11, 12]
 BANDS_60M = [0, 9, 10]
-BANDS_RES = {"10":BANDS_10M, "20":BANDS_20M, "60":BANDS_60M}
-BANDS_LIST = {"B01":0, "B02":1, "B03":2, "B04":3, "B05":4, "B06":5, "B07":6, "B08":7, "B8A":8, "B09":9,
-         "B10":10, "B11":11, "B12":12}
+BANDS_RES = {"10": BANDS_10M, "20": BANDS_20M, "60": BANDS_60M}
+BANDS_LIST = {"B01": 0, "B02": 1, "B03": 2, "B04": 3, "B05": 4, "B06": 5, "B07": 6,
+              "B08": 7, "B8A": 8, "B09": 9, "B10": 10, "B11": 11, "B12": 12}
 BAND_PATTERN = "\D{1}\d{2}\D{3}_\d{8}\D{1}\d{6}_B(\w{2})"
 
 
@@ -104,8 +106,8 @@ class S2Image:
             bands = list(range(len(BANDS_LIST)))
         assert any([type(bands) == np.ndarray, type(bands) == list]), "Selected bands must be an array or list"
 
-        assert (self.out_res in ["10", "20", "30", "60"]), "Not valid output resolution. \n" \
-                                                          "Choose ""10"", ""20"", ""30"", ""60"""
+        assert (self.out_res in ["10", "20", "30", "60"]), \
+            "Not valid output resolution. \n" "Choose ""10"", ""20"", ""30"", ""60"""
 
         bbox, slice_ = self.from_slice_out_res(slice_=slice_)
 
@@ -253,7 +255,7 @@ class S2Image:
             # Gnerate chache in all cases except only exists cache but overwite is False
             if overwrite or not(self.check_cache(band_name=b) or overwrite):
                 if overwrite:
-                    logging.warning('Overwriting cache: {} ({}m)'.format(b,self.out_res))
+                    logging.warning('Overwriting cache: {} ({}m)'.format(b, self.out_res))
 
                 data = self.load_bands(bands=[BANDS_LIST[b]], enabled_cache=False)
                 self.save_band(data=data, band_name=b)
@@ -285,8 +287,8 @@ class S2Image:
         :return:
         """
         io_modes = {0:"w", 1:"r+"}
-        assert self.out_res in ["10", "20", "30", "60"], "Not valid output resolution. \n" \
-                                                    "Choose ""10"", ""20"", ""30"", ""60"""
+        assert self.out_res in ["10", "20", "30", "60"], \
+            "Not valid output resolution. \n" "Choose ""10"", ""20"", ""30"", ""60"""
         if data.ndim > 2:
             msk = np.any(np.ma.getmaskarray(data), axis=-1, keepdims=False)
         else:
@@ -318,13 +320,12 @@ class S2Image:
         '''
         with open(self.metadata_tl) as f:
             root = ET.fromstring(f.read())
-            # Stoopid XML namespace prefix
+            # XML namespace prefix
             nsPrefix = root.tag[:root.tag.index('}') + 1]
             nsDict = {'n1': nsPrefix[1:-1]}
 
             generalInfoNode = root.find('n1:General_Info', nsDict)
-            # N.B. I am still not entirely convinced that this SENSING_TIME is really
-            # the acquisition time, but the documentation is rubbish.
+
             sensingTimeNode = generalInfoNode.find('SENSING_TIME')
             sensingTimeStr = sensingTimeNode.text.strip()
             self.datetime = datetime.datetime.strptime(sensingTimeStr, "%Y-%m-%dT%H:%M:%S.%fZ")
@@ -332,7 +333,7 @@ class S2Image:
             tileIdFullStr = tileIdNode.text.strip()
             self.tileId = tileIdFullStr.split('_')[-2]
             self.satId = tileIdFullStr[:3]
-            self.procLevel = tileIdFullStr[13:16]  # Not sure whether to use absolute pos or split by '_'....
+            self.procLevel = tileIdFullStr[13:16]
 
             geomInfoNode = root.find('n1:Geometric_Info', nsDict)
             geocodingNode = geomInfoNode.find('Tile_Geocoding')
@@ -348,10 +349,7 @@ class S2Image:
                 ncols = int(sizeNode.find('NCOLS').text)
                 self.dimsByRes[res] = (nrows, ncols)
 
-            # Upper-left corners of images at different resolutions. As far as I can
-            # work out, these coords appear to be the upper left corner of the upper left
-            # pixel, i.e. equivalent to GDAL's convention. This also means that they
-            # are the same for the different resolutions, which is nice.
+            # Upper-left corners of images at different resolutions.
             self.ulxyByRes = {}
             posNodeList = geocodingNode.findall('Geoposition')
             for posNode in posNodeList:
@@ -370,32 +368,24 @@ class S2Image:
             self.sunAzimuthGrid = self.makeValueArray(sunAzimuthNode.find('Values_List'))
             self.anglesGridShape = self.sunAzimuthGrid.shape
 
-            # Now build up the viewing angle per grid cell, from the separate layers
-            # given for each detector for each band. Initially I am going to keep
-            # the bands separate, just to see how that looks.
-            # The names of things in the XML suggest that these are view angles,
-            # but the numbers suggest that they are angles as seen from the pixel's
-            # frame of reference on the ground, i.e. they are in fact what we ultimately want.
+            # Viewing angle per grid cell, from the separate layers
+            # given for each detector for each band.
             viewingAngleNodeList = tileAnglesNode.findall('Viewing_Incidence_Angles_Grids')
             self.viewZenithDict = self.buildViewAngleArr(viewingAngleNodeList, 'Zenith')
             self.viewAzimuthDict = self.buildViewAngleArr(viewingAngleNodeList, 'Azimuth')
 
-            # Make a guess at the coordinates of the angle grids. These are not given
-            # explicitly in the XML, and don't line up exactly with the other grids, so I am
-            # making a rough estimate. Because the angles don't change rapidly across these
-            # distances, it is not important if I am a bit wrong (although it would be nice
-            # to be exactly correct!).
+            # Coordinates of the angle grids.
             (ulx, uly) = self.ulxyByRes["10"]
             self.anglesULXY = (ulx - self.angleGridXres / 2.0, uly + self.angleGridYres / 2.0)
 
     def buildViewAngleArr(self, viewingAngleNodeList, angleName):
         """
-        Build up the named viewing angle array from the various detector strips given as
-        separate arrays. I don't really understand this, and may need to re-write it once
-        I have worked it out......
+        Viewing angle array from the detector strips given as
+        separate arrays.
 
-        The angleName is one of 'Zenith' or 'Azimuth'.
-        Returns a dictionary of 2-d arrays, keyed by the bandId string.
+        :param viewingAngleNodeList: incidence angle array from metadata
+        :param angleName: 'Zenith' or 'Azimuth'.
+        :return: dictionary of 2-d arrays, keyed by the bandId string.
         """
         angleArrDict = {}
         for viewingAngleNode in viewingAngleNodeList:
@@ -462,6 +452,11 @@ class S2Image:
             raise StopIteration()
 
     def load_clouds_bqa(self, slice_=None):
+        """
+        Load BQA mask stored as polygons in metadata.
+        :param slice_:
+        :return: L1C cloud mask
+        """
         mask_types = ["OPAQUE", "CIRRUS"]
         poly_list = list(self.get_polygons_bqa())
 
@@ -476,7 +471,6 @@ class S2Image:
             n_polys = np.sum([poly["attributes"]["maskType"] == mask_type for poly in poly_list])
             msk = np.zeros(shape=(nrows, ncols), dtype=np.float32)
             if n_polys > 0:
-                # n_interiors = np.sum([len(poly) for poly in poly_list if poly["interiors"]])
                 multi_polygon = MultiPolygon([poly["geometry"]
                                               for poly in poly_list
                                               if poly["attributes"]["maskType"] == mask_type]).buffer(0)
@@ -548,9 +542,9 @@ class S2Image:
     @staticmethod
     def makeValueArray(valuesListNode):
         """
-        Take a <Values_List> node from the XML, and return an array of the values contained
-        within it. This will be a 2-d numpy array of float32 values (should I pass the dtype in??)
-
+        Take a <Values_List> node from the XML and return an array of the values contained
+        within it.
+        :return: 2-d numpy array
         """
         valuesList = valuesListNode.findall('VALUES')
         vals = []
@@ -562,6 +556,11 @@ class S2Image:
 
     @staticmethod
     def affine_transform_asarray(affine_obj):
+        """
+        Parse an affine object into a numpy array.
+        :param affine_obj:
+        :return:
+        """
         np_transform = np.array([[affine_obj.a, affine_obj.b, affine_obj.c],
                                  [affine_obj.d, affine_obj.e, affine_obj.f]])
         return np_transform
@@ -580,8 +579,7 @@ class S2Image:
 
 def rgba(bands):
     msk = (~np.any(np.ma.getmaskarray(bands), axis=-1, keepdims=True)).astype(np.float32)
-    rgba_ = np.concatenate((bands, msk),
-                          axis=-1)
+    rgba_ = np.concatenate((bands, msk), axis=-1)
     return rgba_
 
 
@@ -589,8 +587,8 @@ def generate_polygon(bbox):
     """
     Generates a list of coordinates: [[x1,y1],[x2,y2],[x3,y3],[x4,y4],[x1,y1]]
     """
-    return [[bbox[0],bbox[1]],
-             [bbox[2],bbox[1]],
-             [bbox[2],bbox[3]],
-             [bbox[0],bbox[3]],
-             [bbox[0],bbox[1]]]
+    return [[bbox[0], bbox[1]],
+            [bbox[2], bbox[1]],
+            [bbox[2], bbox[3]],
+            [bbox[0], bbox[3]],
+            [bbox[0], bbox[1]]]
