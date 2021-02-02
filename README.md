@@ -45,7 +45,7 @@ The folder `./S2A_MSIL1C_20160417T110652_N0201_R137_T29RPQ_20160417T111159.SAFE`
 If you use this work please cite:
 
 ```
- @article{mateo-garcia_transferring_2020,
+ @article{lopez-puigdollers_benchmarking_2021,
 	title = {Benchmarking Deep Learning models for Cloud Detection in {Landsat-8} and {Sentinel-2} images},
 	volume = {},
 	issn = {},
