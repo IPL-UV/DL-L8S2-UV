@@ -2,7 +2,9 @@ import rasterio
 import itertools
 import pkg_resources
 
+import tensorflow as tf
 import numpy as np
+
 from numpy.lib.stride_tricks import as_strided
 from dl_l8s2_uv import model
 
@@ -26,23 +28,31 @@ CLOUD_DETECTION_WEIGHTS = {
 NEW_FORMAT = "(S2\w{1})_MSIL\w{2}_(\d{4}\d{2}\d{2}T\d{2}\d{2}\d{2})_(\w{5})_(\w{4})_T(\w{5})_(\w{15})"
 OLD_FORMAT = "(S2\w{1})_(\w{4})_(\w{3}_\w{6})_(\w{4})_(\d{8}T\d{6})_(\w{4})_V(\d{4}\d{2}\d{2}T\d{6})_(\d{4}\d{2}\d{2}T\d{6})"
 
+# Set verbosity to error level
+tf.get_logger().setLevel('ERROR')
+
 
 ####################################################################################
 #                                    Tensorflow                                    #
 ####################################################################################
 class Model:
-    def __init__(self, satname, namemodel="rgbiswir"):
+    def __init__(self, satname, namemodel="rgbiswir", weights_path=None):
         self.satname = satname
         self.namemodel = namemodel
         self.bands_read = BANDS_MODEL[satname + namemodel]
         self.model_clouds = model.load_model(
             (None, None), weight_decay=0, bands_input=len(self.bands_read)
         )
-        self.model_clouds.load_weights(CLOUD_DETECTION_WEIGHTS[namemodel])
+
+        if weights_path is None:
+            weights_path = CLOUD_DETECTION_WEIGHTS[namemodel]
+
+        self.model_clouds.load_weights(weights_path)
 
     def predict(self, satobj):
         assert satobj.satname == self.satname, "{} image not compatible with {} model".format(satobj.satname,
                                                                                               self.satname)
+        tf.keras.backend.clear_session()
         bands = satobj.load_bands(bands=self.bands_read)
         invalids = np.any(np.ma.getmaskarray(bands), axis=2)
 
@@ -108,13 +118,13 @@ def select_cuda_device(cuda_device="gpu", memory_growth=True):
 
     if cuda_device == "GPU":
         # Allocate memory on demand
-        import tensorflow as tf
         physical_devices = tf.config.experimental.list_physical_devices('GPU')
         if len(physical_devices) == 0:
             import logging
             logging.warning("GPU selected but not available. CPU will be used instead")
             return
-        elif memory_growth:
+
+        if memory_growth:
             tf.config.experimental.set_memory_growth(physical_devices[0], memory_growth)
 
 
