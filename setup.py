@@ -9,5 +9,5 @@ setup(name='dl_l8s2_uv',
       packages=find_packages(exclude=["tests"]),
       package_data={'': ['*.hdf5']},
       include_package_data=True,
-      install_requires=["numpy", "lxml", "spectral", "luigi", "h5py"],
+      install_requires=["numpy", "lxml", "spectral", "luigi", "h5py", "rasterio", "shapely"],
       zip_safe=False)
