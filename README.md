@@ -1,8 +1,8 @@
-# Benchmarking Deep Learning models for Cloud Masking in Landsat-8 and Sentinel-2
+# Benchmarking Deep Learning models for Cloud Detection in Landsat-8 and Sentinel-2 images
 
 This repository contains source code used in
 
-> [1] López-Puigdollers, D., Mateo-García, G., Gómez-Chova, L. “Benchmarking Deep Learning models for Cloud Masking in Landsat-8 and Sentinel-2” Submitted [pre-print](https://arxiv.org/abs/xxxx.xxxxx)
+> [1] López-Puigdollers, D., Mateo-García, G., Gómez-Chova, L. “Benchmarking Deep Learning models for Cloud Detection in Landsat-8 and Sentinel-2 images” Submitted [pre-print](https://arxiv.org/abs/xxxx.xxxxx)
 
 ![NN architecture](figs/neural_network.png)
 
@@ -45,16 +45,16 @@ The folder `./S2A_MSIL1C_20160417T110652_N0201_R137_T29RPQ_20160417T111159.SAFE`
 If you use this work please cite:
 
 ```
- @article{mateo-garcia_transferring_2020,
-	title = {Transferring deep learning models for cloud detection between {Landsat}-8 and {Proba}-{V}},
-	volume = {160},
-	issn = {0924-2716},
-	doi = {10.1016/j.isprsjprs.2019.11.024},
-	journal = {ISPRS Journal of Photogrammetry and Remote Sensing},
-	author = {Mateo-García, Gonzalo and Laparra, Valero and López-Puigdollers, Dan and Gómez-Chova, Luis},
-	month = feb,
-	year = {2020},
-	pages = {1--17},
+ @article{lopez-puigdollers_benchmarking_2021,
+	title = {Benchmarking Deep Learning models for Cloud Detection in {Landsat-8} and {Sentinel-2} images},
+	volume = {},
+	issn = {},
+	doi = {},
+	journal = {Submitted},
+	author = {López-Puigdollers, Dan and Mateo-García, Gonzalo and Gómez-Chova, Luis},
+	month = {},
+	year = {2021},
+	pages = {},
 }
 ```
 
