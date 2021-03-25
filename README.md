@@ -2,7 +2,7 @@
 
 This repository contains source code used in
 
-> [1] López-Puigdollers, D., Mateo-García, G., Gómez-Chova, L. “Benchmarking Deep Learning models for Cloud Detection in Landsat-8 and Sentinel-2 images” Submitted [pre-print](https://arxiv.org/abs/xxxx.xxxxx)
+> [1] López-Puigdollers, D., Mateo-García, G., Gómez-Chova, L. “Benchmarking Deep Learning models for Cloud Detection in Landsat-8 and Sentinel-2 images” [paper](https://www.mdpi.com/2072-4292/13/5/992/htm)
 
 ![GA abstract](figs/GA_MDPI_RS_Benchmark.png)
 <!---
