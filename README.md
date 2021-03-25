@@ -42,19 +42,20 @@ The folder `./S2A_MSIL1C_20160417T110652_N0201_R137_T29RPQ_20160417T111159.SAFE`
 
 ## Cite
 
-If you use this work please cite:
+If you use this code please cite:
 
 ```
- @article{lopez-puigdollers_benchmarking_2021,
-	title = {Benchmarking Deep Learning models for Cloud Detection in {Landsat-8} and {Sentinel-2} images},
-	volume = {},
-	issn = {},
-	doi = {},
-	journal = {Submitted},
-	author = {López-Puigdollers, Dan and Mateo-García, Gonzalo and Gómez-Chova, Luis},
-	month = {},
-	year = {2021},
-	pages = {},
+@article{lopez-puigdollers_benchmarking_2021,
+  title={Benchmarking Deep Learning Models for Cloud Detection in Landsat-8 and Sentinel-2 Images},
+  author={L{\'o}pez-Puigdollers, Dan and Mateo-Garc{\'\i}a, Gonzalo and G{\'o}mez-Chova, Luis},
+  journal={Remote Sensing},
+  doi={10.3390/rs13050992},
+  link={https://www.mdpi.com/2072-4292/13/5/992/htm},
+  volume={13},
+  number={5},
+  pages={992},
+  year={2021},
+  publisher={Multidisciplinary Digital Publishing Institute}
 }
 ```
 
@@ -62,3 +63,5 @@ If you use this work please cite:
 
 * [Multitemporal cloud masking in the Google Earth Engine](https://github.com/IPL-UV/ee_ipl_uv)
 * [Landsat-8 to Proba-V transfer learning and Domain adaptation for cloud detection](https://github.com/IPL-UV/pvl8dagans)
+
+This work has been developed in the context of the projects TEC2016-77741-R and PID2019-109026RB-I00 (MINECO-ERDF) granted to Luis Gómez-Chova.
