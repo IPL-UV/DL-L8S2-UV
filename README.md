@@ -25,12 +25,12 @@ python setup.py install
 ## Inference Landsat-8 images
 
 Expects an L1T Landsat-8 image from the [EarthExplorer](https://earthexplorer.usgs.gov/).
-The `--l8image` attribute points to the unzipped folder with a GeoTIF image for each band.
+The `--l8image` attribute points to the unzipped folder with a GeoTIFF image for each band.
 
 ```
 python inference.py CloudMaskL8 --l8image ./LC08_L1TP_002054_20160520_20170324_01_T1/ --namemodel rgbiswir
 ```
-The folder `./LC08_L1TP_002054_20160520_20170324_01_T1` will contain a GeoTIF with the cloud mask.
+The folder `./LC08_L1TP_002054_20160520_20170324_01_T1` will contain a GeoTIFF with the cloud mask.
 
 ## Inference Sentinel-2 images
 
@@ -40,8 +40,11 @@ The `--s2image` attribute points to the unzipped `SAFE` folder. The `--resolutio
 ```
 python inference.py CloudMaskS2 --s2image ./S2A_MSIL1C_20160417T110652_N0201_R137_T29RPQ_20160417T111159.SAFE/ --namemodel rgbiswir --resolution 30
 ```
-The folder `./S2A_MSIL1C_20160417T110652_N0201_R137_T29RPQ_20160417T111159.SAFE` will contain a GeoTIF with the cloud mask.
+The folder `./S2A_MSIL1C_20160417T110652_N0201_R137_T29RPQ_20160417T111159.SAFE` will contain a GeoTIFF with the cloud mask.
 
+## Inference Notebook
+
+We have also included a notebook that uses the model and plots the results inline [here](./notebooks/Example%20-%20Cloud%20masking%20with%20DL%20in%20L-8%20and%20S-2%20images.ipynb).
 
 ## Cite
 
