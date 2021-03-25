@@ -25,7 +25,7 @@ python setup.py install
 ## Inference Landsat-8 images
 
 Expects an L1T Landsat-8 image from the [EarthExplorer](https://earthexplorer.usgs.gov/).
-The `--landsatimage` attribute points to the unzipped folder with a GeoTIF image for each band.
+The `--l8image` attribute points to the unzipped folder with a GeoTIF image for each band.
 
 ```
 python inference.py CloudMaskL8 --l8image ./LC08_L1TP_002054_20160520_20170324_01_T1/ --namemodel rgbiswir
