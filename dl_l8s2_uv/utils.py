@@ -13,10 +13,10 @@ import logging
 import re
 
 
-BANDS_MODEL = {"L8rgbiswir": [2, 3, 4, 5, 6, 7],  # 1-based band index
-               "L8rgbi": [2, 3, 4, 5],  # 1-based band index
-               "S2rgbi": [1, 2, 3, 7],  # 0-based band index
-               "S2rgbiswir": [1, 2, 3, 7, 11, 12],  # 0-based band index
+BANDS_MODEL = {"L8rgbiswir": [2, 3, 4, 5, 6, 7],  # 1-based band index [B2, B3, B4, B5, B6, B7]
+               "L8rgbi": [2, 3, 4, 5],  # 1-based band index [B2, B3, B4, B5]
+               "S2rgbi": [1, 2, 3, 7],  # 0-based band index [B2, B3, B4, B8]
+               "S2rgbiswir": [1, 2, 3, 7, 11, 12],  # 0-based band index [B2, B3, B4, B8, B11, B12]
 }
 
 CLOUD_DETECTION_WEIGHTS = {
