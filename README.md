@@ -70,4 +70,6 @@ If you use this code please cite:
 * [Multitemporal cloud masking in the Google Earth Engine](https://github.com/IPL-UV/ee_ipl_uv)
 * [Landsat-8 to Proba-V transfer learning and Domain adaptation for cloud detection](https://github.com/IPL-UV/pvl8dagans)
 
+## Acknowledgements
+
 This work has been developed in the context of the projects TEC2016-77741-R and PID2019-109026RB-I00 (MINECO-ERDF) granted to Luis Gómez-Chova.
